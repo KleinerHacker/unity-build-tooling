@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
-using PcSoft.Scripts.Provider;
-using PcSoft.Scripts.Utils;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Provider;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Utils;
 using UnityEditor;
 using UnityEngine;
 using UnityToolbarExtender;
 
-namespace PcSoft.Scripts.Toolbar
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
 {
     [InitializeOnLoad]
     public static class BuildingToolbar

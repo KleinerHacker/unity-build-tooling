@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using PcSoft.Scripts.Assets.Misc;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Assets.Misc;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace PcSoft.Scripts.Actions
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Actions
 {
     public static class ToolingAction
     {

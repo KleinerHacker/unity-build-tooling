@@ -1,13 +1,13 @@
 using System;
 using System.IO;
 using System.Linq;
-using PcSoft.Scripts.Provider;
-using PcSoft.Scripts.Toolbar;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Provider;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 
-namespace PcSoft.Scripts.Utils
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
 {
     public static class UnityBuilding
     {

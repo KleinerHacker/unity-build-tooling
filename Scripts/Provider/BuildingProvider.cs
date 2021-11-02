@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
-using PcSoft.Scripts.Toolbar;
-using PcSoft.Scripts.Utils;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Utils;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
-namespace PcSoft.Scripts.Provider
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
 {
     public sealed class BuildingProvider : SettingsProvider
     {

@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace PcSoft.Scripts.Utils
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
 {
     internal static class UnityHelper
     {
