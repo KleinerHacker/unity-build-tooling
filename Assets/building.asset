@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: building
+  m_EditorClassIdentifier: UnityBuildTooling.Editor:PcSoft.Scripts.Provider:BuildingSettings
+  buildTargetOverwritten: 0
+  buildTarget: 0
+  buildType: 0
+  buildExtras: 8
+  clean: 1
+  appName: Extensions
+  typeItems:
+  - name: Debug
+    targetPath: Debug
+    developmentBuild: 1
+    allowDebugging: 1
+    compress: 0
+    cppSettings: 0
+    strippingLevel: 0
+    androidArchitecture: 4294967295
+    appleMobileArchitecture: 2
+    defines:
+    - DEBUG
+  - name: Debug Native
+    targetPath: DebugNative
+    developmentBuild: 1
+    allowDebugging: 1
+    compress: 0
+    cppSettings: 1
+    strippingLevel: 0
+    androidArchitecture: 4294967295
+    appleMobileArchitecture: 2
+    defines:
+    - DEBUG
+  - name: Release
+    targetPath: Release
+    developmentBuild: 0
+    allowDebugging: 0
+    compress: 1
+    cppSettings: 0
+    strippingLevel: 1
+    androidArchitecture: 4294967295
+    appleMobileArchitecture: 2
+    defines:
+    - RELEASE
+  - name: Release Native
+    targetPath: ReleaseNative
+    developmentBuild: 0
+    allowDebugging: 0
+    compress: 1
+    cppSettings: 3
+    strippingLevel: 1
+    androidArchitecture: 4294967295
+    appleMobileArchitecture: 2
+    defines:
+    - RELEASE
