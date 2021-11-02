@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "com.marijnzwemmer.unity-toolbar-extender": "https://github.com/marijnz/unity-toolbar-extender.git#1.4.1",
+    "com.marijnzwemmer.unity-toolbar-extender": "https://github.com/marijnz/unity-toolbar-extender.git",
   }
 }
