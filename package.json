@@ -4,7 +4,9 @@
   "displayName": "Build Tooling",
   "description": "Add a build toolbar into unity to create and run build very easy.",
   "unity": "2021.1",
-  "dependencies": {},
+  "dependencies": {
+	  "https://github.com/marijnz/unity-toolbar-extender.git": "1.4.1"
+  },
   "keywords": [
     "toolbar",
     "build",
