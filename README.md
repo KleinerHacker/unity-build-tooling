@@ -10,8 +10,8 @@ https://github.com/marijnz/unity-toolbar-extender
 
 This plugin creates a toolbar extension like in Rider:
 
-![alt preview](https://github.com/KleinerHacker/unity-build-tooling/tree/master/Docs/toolbar.png)
+![alt preview](https://raw.githubusercontent.com/KleinerHacker/unity-build-tooling/master/Docs/toolbar.png)
 
 Additional it creates a new project settings page to setup build types:
 
-![alt preview](https://github.com/KleinerHacker/unity-build-tooling/tree/master/Docs/settings.png)
+![alt preview](https://raw.githubusercontent.com/KleinerHacker/unity-build-tooling/master/Docs/settings.png)
