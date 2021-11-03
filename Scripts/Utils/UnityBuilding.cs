@@ -9,12 +9,12 @@ using UnityEditor.Build.Reporting;
 
 namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
 {
-    public static class UnityBuilding
+    internal static class UnityBuilding
     {
         private const string TargetKey = "${TARGET}";
         internal const string DefaultTargetPath = "Builds/" + TargetKey;
 
-        public static void Build(bool run)
+        public static void Build(BuildBehavior behavior)
         {
             var buildingSettings = BuildingSettings.Singleton;
             var buildingType = buildingSettings.TypeItems[buildingSettings.BuildType];
@@ -25,7 +25,6 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
             {
                 PlayerSettings.SetIl2CppCompilerConfiguration(buildTargetGroup, cppCompilerConfiguration.Value);
             }
-            PlayerSettings.SetManagedStrippingLevel(buildTargetGroup, buildingType.StrippingLevel);
 
             var targetPath = DefaultTargetPath.Replace(TargetKey, buildingSettings.BuildTarget.ToString()) + "/" + buildingType.TargetPath;
             var appName = buildingSettings.AppName + GetExtension(buildingSettings.BuildTarget);
@@ -34,7 +33,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
                 scenes = KnownScenes,
                 target = buildingSettings.BuildTarget,
                 locationPathName = targetPath + "/" + appName,
-                options = CalculateOptions(buildingType, buildingSettings.BuildExtras, run, buildingSettings.Clean),
+                options = CalculateOptions(buildingType, buildingSettings.BuildExtras, behavior, buildingSettings.Clean, buildingSettings.ShowFolder),
                 extraScriptingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup).Split(',', StringSplitOptions.RemoveEmptyEntries).Concat(buildingType.Defines).ToArray()
             };
 
@@ -61,7 +60,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
 
         private static string[] KnownScenes => EditorBuildSettings.scenes.Select(x => x.path).ToArray();
 
-        private static BuildOptions CalculateOptions(BuildingTypeItem buildingType, BuildingToolbar.BuildExtras buildExtras, bool autoRun, bool clean)
+        private static BuildOptions CalculateOptions(BuildingTypeItem buildingType, BuildingToolbar.BuildExtras buildExtras, BuildBehavior behavior, bool clean, bool showFolder)
         {
             var options = BuildOptions.None;
             if (buildingType.Compress)
@@ -95,14 +94,43 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
                 options |= BuildOptions.EnableDeepProfilingSupport;
             }
 
-            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.OpenFolder))
+            if (showFolder)
             {
                 options |= BuildOptions.ShowBuiltPlayer;
             }
 
-            if (autoRun)
+            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.WaitForConnection))
             {
-                options |= BuildOptions.AutoRunPlayer;
+                options |= BuildOptions.WaitForPlayerConnection;
+            }
+
+            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.ConnectToHost))
+            {
+                options |= BuildOptions.ConnectToHost;
+            }
+            
+            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.DetailedReport))
+            {
+                options |= BuildOptions.DetailedBuildReport;
+            }
+            
+            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.SymlinkSources))
+            {
+                options |= BuildOptions.SymlinkSources;
+            }
+
+            switch (behavior)
+            {
+                case BuildBehavior.BuildOnly:
+                    break;
+                case BuildBehavior.BuildAndRun:
+                    options |= BuildOptions.AutoRunPlayer;
+                    break;
+                case BuildBehavior.BuildScriptsOnly:
+                    options |= BuildOptions.BuildScriptsOnly;
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
 
             if (clean)
@@ -154,6 +182,13 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
                 default:
                     throw new ArgumentOutOfRangeException(nameof(buildTarget), buildTarget, null);
             }
+        }
+
+        public enum BuildBehavior
+        {
+            BuildOnly,
+            BuildAndRun,
+            BuildScriptsOnly,
         }
     }
 }

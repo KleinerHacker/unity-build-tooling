@@ -156,9 +156,11 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
         [SerializeField]
         private int buildType;
         [SerializeField]
-        private BuildingToolbar.BuildExtras buildExtras = BuildingToolbar.BuildExtras.OpenFolder;
+        private BuildingToolbar.BuildExtras buildExtras;
         [SerializeField]
         private bool clean = true;
+        [SerializeField]
+        private bool showFolder = true;
 
         [FormerlySerializedAs("targetName")]
         [SerializeField]
@@ -205,6 +207,12 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
         {
             get => clean;
             internal set => clean = value;
+        }
+
+        public bool ShowFolder
+        {
+            get => showFolder;
+            internal set => showFolder = value;
         }
 
         #endregion
