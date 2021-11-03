@@ -180,7 +180,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
                 case BuildTarget.StandaloneWindows64:
                     return ".exe";
                 case BuildTarget.Android:
-                    return ".apk";
+                    return EditorUserBuildSettings.buildAppBundle ? ".aab" : ".apk";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(buildTarget), buildTarget, null);
             }
