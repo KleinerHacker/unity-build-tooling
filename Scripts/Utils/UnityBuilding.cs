@@ -26,6 +26,8 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
                 PlayerSettings.SetIl2CppCompilerConfiguration(buildTargetGroup, cppCompilerConfiguration.Value);
             }
 
+            EditorUserBuildSettings.buildAppBundle = buildingType.BuildAppBundle;
+
             var targetPath = DefaultTargetPath.Replace(TargetKey, buildingSettings.BuildTarget.ToString()) + "/" + buildingType.TargetPath;
             var appName = buildingSettings.AppName + GetExtension(buildingSettings.BuildTarget);
             var options = new BuildPlayerOptions
