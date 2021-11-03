@@ -39,7 +39,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
             buildingSettings.BuildTarget = (BuildTarget)EditorGUILayout.EnumPopup(null, buildingSettings.BuildTarget,
                 v => UnityHelper.IsBuildTargetSupported((BuildTarget)v), false, ToolbarStyles.popupStyle, ToolbarLayouts.popupLayout);
             EditorGUILayout.EditorToolbar(
-                new EditorToolDelegate(EditorGUIUtility.FindTexture("Assets/build-tooling/Icons/Refresh.png"), "Reset to active target", 
+                new EditorToolDelegate((Texture2D)EditorGUIUtility.IconContent("d_Refresh").image, "Reset to active target", 
                     () => buildingSettings.ResetBuildTarget())
             );
 
@@ -64,7 +64,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
             GUILayout.Space(5f);
 
             EditorGUILayout.EditorToolbar(
-                new EditorToolDelegate(EditorGUIUtility.FindTexture("Assets/build-tooling/Icons/Settings.png"), "Build the project", 
+                new EditorToolDelegate((Texture2D)EditorGUIUtility.IconContent("d_Settings").image, "Build the project", 
                     () => BuildMenu.ShowAsContext())
             );
 

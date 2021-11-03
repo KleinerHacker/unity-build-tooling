@@ -101,6 +101,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
                             Defines = new[] { "DEBUG" },
                             CPPSettings = IL2CPPSettings.Deactivated,
                             StrippingLevel = ManagedStrippingLevel.Disabled,
+                            BuildAppBundle = false,
                         },
                         new BuildingTypeItem
                         {
@@ -112,6 +113,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
                             Defines = new[] { "DEBUG" },
                             CPPSettings = IL2CPPSettings.Debug,
                             StrippingLevel = ManagedStrippingLevel.Disabled,
+                            BuildAppBundle = false,
                         },
                         new BuildingTypeItem
                         {
@@ -123,6 +125,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
                             Defines = new[] { "RELEASE" },
                             CPPSettings = IL2CPPSettings.Deactivated,
                             StrippingLevel = ManagedStrippingLevel.Low,
+                            BuildAppBundle = true,
                         },
                         new BuildingTypeItem
                         {
@@ -134,6 +137,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
                             Defines = new[] { "RELEASE" },
                             CPPSettings = IL2CPPSettings.Master,
                             StrippingLevel = ManagedStrippingLevel.Low,
+                            BuildAppBundle = true,
                         }
                     };
                     AssetDatabase.CreateAsset(settings, Path);
@@ -264,10 +268,14 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
         [SerializeField]
         private ManagedStrippingLevel strippingLevel = ManagedStrippingLevel.Disabled;
 
-        [Space]
+        [Header("Android")]
         [SerializeField]
         private AndroidArchitecture androidArchitecture = AndroidArchitecture.All;
 
+        [SerializeField]
+        private bool buildAppBundle;
+
+        [Header("iOS")]
         [SerializeField]
         private AppleMobileArchitecture appleMobileArchitecture = AppleMobileArchitecture.Universal;
 
@@ -325,6 +333,12 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
         {
             get => androidArchitecture;
             internal set => androidArchitecture = value;
+        }
+
+        public bool BuildAppBundle
+        {
+            get => buildAppBundle;
+            internal set => buildAppBundle = value;
         }
 
         public AppleMobileArchitecture AppleMobileArchitecture
