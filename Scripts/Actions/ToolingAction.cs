@@ -10,7 +10,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Actions
 {
     public static class ToolingAction
     {
-        [MenuItem("Tools/Unity Packages/Auto Generate")]
+        [MenuItem("Build/Build Unity Packages", false, 1000)]
         public static void AutoGenerateUnityPackages()
         {
             var folder = EditorUtility.OpenFolderPanel("Auto Generate Unity Packages", null, null);
