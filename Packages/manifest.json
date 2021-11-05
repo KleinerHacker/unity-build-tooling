@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "com.marijnzwemmer.unity-toolbar-extender": "1.4.1"
-  },
-  "enableLockFile": true,
-  "resolutionStrategy": "highestMinor"
-}
