@@ -9,6 +9,7 @@ Use this repository directly in Unity.
 
 ### Open UPM
 URL: https://package.openupm.com
+
 Scope: org.pcsoft
 
 # usage
