@@ -7,6 +7,10 @@ Use this repository directly in Unity.
 ### requirements
 * https://github.com/marijnz/unity-toolbar-extender
 
+### Open UPM
+URL: https://package.openupm.com
+Scope: org.pcsoft
+
 # usage
 
 This plugin creates a toolbar extension like in Rider:
