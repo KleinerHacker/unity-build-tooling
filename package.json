@@ -10,9 +10,6 @@
     "tooling",
     "compile"
   ],
-  "repository": {
-    "url": "https://package.openupm.com"
-  },
   "dependencies": {
     "com.marijnzwemmer.unity-toolbar-extender": "1.4.1"
   },
