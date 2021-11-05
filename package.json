@@ -1,5 +1,5 @@
 {
-  "name": "org.pcsoft.unity.build-tooling",
+  "name": "org.pcsoft.build-tooling",
   "version": "1.1.1",
   "displayName": "Build Tooling",
   "description": "Add a build toolbar into unity to create and run build very easy.",

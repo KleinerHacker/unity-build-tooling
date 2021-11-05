@@ -2,11 +2,12 @@
 Extension for unity to make easier create / run a build
 
 # install
+Use this repository directly in Unity.
 
-Required packages:
-https://github.com/marijnz/unity-toolbar-extender
+### requirements
+* https://github.com/marijnz/unity-toolbar-extender
 
-# in unity
+# usage
 
 This plugin creates a toolbar extension like in Rider:
 
