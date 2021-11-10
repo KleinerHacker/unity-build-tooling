@@ -99,7 +99,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
                             Compress = false,
                             AllowDebugging = true,
                             Defines = new[] { "DEBUG" },
-                            CPPSettings = IL2CPPSettings.Deactivated,
+                            CppSettings = IL2CPPSettings.Deactivated,
                             StrippingLevel = ManagedStrippingLevel.Disabled,
                             BuildAppBundle = false,
                         },
@@ -111,7 +111,8 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
                             Compress = false,
                             AllowDebugging = true,
                             Defines = new[] { "DEBUG" },
-                            CPPSettings = IL2CPPSettings.Debug,
+                            CppSettings = IL2CPPSettings.Debug,
+                            CppIncrementalBuild = true,
                             StrippingLevel = ManagedStrippingLevel.Disabled,
                             BuildAppBundle = false,
                         },
@@ -123,7 +124,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
                             Compress = true,
                             AllowDebugging = false,
                             Defines = new[] { "RELEASE" },
-                            CPPSettings = IL2CPPSettings.Deactivated,
+                            CppSettings = IL2CPPSettings.Deactivated,
                             StrippingLevel = ManagedStrippingLevel.Low,
                             BuildAppBundle = true,
                         },
@@ -135,7 +136,8 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
                             Compress = true,
                             AllowDebugging = false,
                             Defines = new[] { "RELEASE" },
-                            CPPSettings = IL2CPPSettings.Master,
+                            CppSettings = IL2CPPSettings.Master,
+                            CppIncrementalBuild = false,
                             StrippingLevel = ManagedStrippingLevel.Low,
                             BuildAppBundle = true,
                         }
@@ -266,6 +268,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
         private IL2CPPSettings cppSettings;
 
         [SerializeField]
+        private bool cppIncrementalBuild;
+
+        [SerializeField]
         private ManagedStrippingLevel strippingLevel = ManagedStrippingLevel.Disabled;
 
         [Header("Android")]
@@ -317,10 +322,16 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
             internal set => compress = value;
         }
 
-        public IL2CPPSettings CPPSettings
+        public IL2CPPSettings CppSettings
         {
             get => cppSettings;
             internal set => cppSettings = value;
+        }
+
+        public bool CppIncrementalBuild
+        {
+            get => cppIncrementalBuild;
+            internal set => cppIncrementalBuild = value;
         }
 
         public ManagedStrippingLevel StrippingLevel

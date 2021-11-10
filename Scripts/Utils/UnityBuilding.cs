@@ -23,7 +23,13 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
             var cppCompilerConfiguration = CalculateConfiguration(buildingType);
             if (cppCompilerConfiguration.HasValue)
             {
+                PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.IL2CPP);
                 PlayerSettings.SetIl2CppCompilerConfiguration(buildTargetGroup, cppCompilerConfiguration.Value);
+                PlayerSettings.SetIncrementalIl2CppBuild(buildTargetGroup, buildingType.CppIncrementalBuild);
+            }
+            else
+            {
+                PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.Mono2x);
             }
 
             EditorUserBuildSettings.buildAppBundle = buildingType.BuildAppBundle;
@@ -145,7 +151,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
 
         private static Il2CppCompilerConfiguration? CalculateConfiguration(BuildingTypeItem item)
         {
-            return item.CPPSettings switch
+            return item.CppSettings switch
             {
                 IL2CPPSettings.Deactivated => null,
                 IL2CPPSettings.Debug => Il2CppCompilerConfiguration.Debug,
