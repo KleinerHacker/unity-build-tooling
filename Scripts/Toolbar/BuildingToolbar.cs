@@ -14,6 +14,10 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
     public static class BuildingToolbar
     {
         private static readonly GenericMenu BuildMenu = new GenericMenu();
+        private static readonly EditorToolDelegate EditorToolRefresh, EditorToolBuild;
+
+        private static readonly BuildingSettings BuildingSettings;
+        private static readonly SerializedObject SerializedObject;
 
         static BuildingToolbar()
         {
@@ -23,52 +27,54 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
             BuildMenu.AddItem(new GUIContent("Build && Run"), false, () => Build(UnityBuilding.BuildBehavior.BuildAndRun));
             BuildMenu.AddSeparator(null);
             BuildMenu.AddItem(new GUIContent("Build Scripts Only"), false, () => Build(UnityBuilding.BuildBehavior.BuildScriptsOnly));
+            
+            EditorToolRefresh = ScriptableObject.CreateInstance<EditorToolDelegate>();
+            EditorToolRefresh.Setup((Texture2D)EditorGUIUtility.IconContent("d_Refresh").image, "Reset to active target", () => BuildingSettings.ResetBuildTarget());
+            
+            EditorToolBuild = ScriptableObject.CreateInstance<EditorToolDelegate>();
+            EditorToolBuild.Setup((Texture2D)EditorGUIUtility.IconContent("d_Settings").image, "Build the project", () => BuildMenu.ShowAsContext());
+            
+            BuildingSettings = BuildingSettings.Singleton;
+            SerializedObject = BuildingSettings.SerializedSingleton;
         }
 
         static void OnToolbarGUI()
         {
-            var buildingSettings = BuildingSettings.Singleton;
-            var serializedObject = BuildingSettings.SerializedSingleton;
-            serializedObject.Update();
+            SerializedObject.Update();
 
             GUILayout.FlexibleSpace();
 
             GUILayout.Space(50f);
 
             GUILayout.Label("Build: ", ToolbarStyles.labelStyle);
-            buildingSettings.BuildTarget = (BuildTarget)EditorGUILayout.EnumPopup(null, buildingSettings.BuildTarget,
+            BuildingSettings.BuildTarget = (BuildTarget)EditorGUILayout.EnumPopup(null, BuildingSettings.BuildTarget,
                 v => UnityHelper.IsBuildTargetSupported((BuildTarget)v), false, ToolbarStyles.popupStyle, ToolbarLayouts.popupLayout);
-            EditorGUILayout.EditorToolbar(
-                new EditorToolDelegate((Texture2D)EditorGUIUtility.IconContent("d_Refresh").image, "Reset to active target", 
-                    () => buildingSettings.ResetBuildTarget())
-            );
+            
+            EditorGUILayout.EditorToolbar(EditorToolRefresh);
 
             GUILayout.Space(5f);
 
-            buildingSettings.BuildType = EditorGUILayout.Popup(buildingSettings.BuildType, buildingSettings.TypeItems.Select(x => x.Name).ToArray(),
+            BuildingSettings.BuildType = EditorGUILayout.Popup(BuildingSettings.BuildType, BuildingSettings.TypeItems.Select(x => x.Name).ToArray(),
                 ToolbarStyles.popupStyle, ToolbarLayouts.popupSmallLayout);
 
             GUILayout.Space(5f);
 
             GUILayout.Label("Flags: ", ToolbarStyles.labelStyle);
-            buildingSettings.BuildExtras = (BuildExtras)EditorGUILayout.EnumFlagsField(buildingSettings.BuildExtras, ToolbarStyles.popupStyle, ToolbarLayouts.popupSmallLayout);
+            BuildingSettings.BuildExtras = (BuildExtras)EditorGUILayout.EnumFlagsField(BuildingSettings.BuildExtras, ToolbarStyles.popupStyle, ToolbarLayouts.popupSmallLayout);
 
             GUILayout.Space(5f);
 
-            buildingSettings.Clean = GUILayout.Toggle(buildingSettings.Clean, new GUIContent("Clean", "Clean complete build cache"), ToolbarStyles.toggleStyle);
+            BuildingSettings.Clean = GUILayout.Toggle(BuildingSettings.Clean, new GUIContent("Clean", "Clean complete build cache"), ToolbarStyles.toggleStyle);
 
             GUILayout.Space(5f);
 
-            buildingSettings.ShowFolder = GUILayout.Toggle(buildingSettings.ShowFolder, new GUIContent("Show Folder", "Open the build folder"), ToolbarStyles.toggleStyle);
+            BuildingSettings.ShowFolder = GUILayout.Toggle(BuildingSettings.ShowFolder, new GUIContent("Show Folder", "Open the build folder"), ToolbarStyles.toggleStyle);
 
             GUILayout.Space(5f);
 
-            EditorGUILayout.EditorToolbar(
-                new EditorToolDelegate((Texture2D)EditorGUIUtility.IconContent("d_Settings").image, "Build the project", 
-                    () => BuildMenu.ShowAsContext())
-            );
+            EditorGUILayout.EditorToolbar(EditorToolBuild);
 
-            serializedObject.ApplyModifiedProperties();
+            SerializedObject.ApplyModifiedProperties();
         }
 
         private static void Build(UnityBuilding.BuildBehavior behavior)
@@ -153,14 +159,14 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
 
         private sealed class EditorToolDelegate : EditorTool
         {
-            private readonly Action _action;
-
-            public override GUIContent toolbarIcon { get; }
+            private Action _action;
+            private GUIContent _guiContent = new GUIContent();
             
+            public override GUIContent toolbarIcon => _guiContent;
 
-            public EditorToolDelegate(Texture2D icon, String tooltip, Action action)
+            public void Setup(Texture2D icon, String tooltip, Action action)
             {
-                toolbarIcon = new GUIContent(icon, tooltip);
+                _guiContent = new GUIContent(icon, tooltip);
                 _action = action;
             }
 
