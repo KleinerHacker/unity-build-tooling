@@ -1,5 +1,4 @@
 using System;
-using UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Utils;
 using UnityEditor;
 using UnityEngine;
@@ -20,60 +19,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
                 {
                     Debug.Log("Unable to find game settings, create new");
 
-                    settings = CreateInstance<BuildingSettings>();
-                    settings.typeItems = new[]
-                    {
-                        new BuildingTypeItem
-                        {
-                            Name = "Debug",
-                            TargetPath = "Debug",
-                            DevelopmentBuild = true,
-                            Compress = false,
-                            AllowDebugging = true,
-                            Defines = new[] { "DEBUG" },
-                            CppSettings = IL2CPPSettings.Deactivated,
-                            StrippingLevel = ManagedStrippingLevel.Disabled,
-                            BuildAppBundle = false,
-                        },
-                        new BuildingTypeItem
-                        {
-                            Name = "Debug Native",
-                            TargetPath = "DebugNative",
-                            DevelopmentBuild = true,
-                            Compress = false,
-                            AllowDebugging = true,
-                            Defines = new[] { "DEBUG" },
-                            CppSettings = IL2CPPSettings.Debug,
-                            CppIncrementalBuild = true,
-                            StrippingLevel = ManagedStrippingLevel.Disabled,
-                            BuildAppBundle = false,
-                        },
-                        new BuildingTypeItem
-                        {
-                            Name = "Release",
-                            TargetPath = "Release",
-                            DevelopmentBuild = false,
-                            Compress = true,
-                            AllowDebugging = false,
-                            Defines = new[] { "RELEASE" },
-                            CppSettings = IL2CPPSettings.Deactivated,
-                            StrippingLevel = ManagedStrippingLevel.Low,
-                            BuildAppBundle = true,
-                        },
-                        new BuildingTypeItem
-                        {
-                            Name = "Release Native",
-                            TargetPath = "ReleaseNative",
-                            DevelopmentBuild = false,
-                            Compress = true,
-                            AllowDebugging = false,
-                            Defines = new[] { "RELEASE" },
-                            CppSettings = IL2CPPSettings.Master,
-                            CppIncrementalBuild = false,
-                            StrippingLevel = ManagedStrippingLevel.Low,
-                            BuildAppBundle = true,
-                        }
-                    };
+                    settings = BuildingSettingsFactory.Create();
                     AssetDatabase.CreateAsset(settings, Path);
                     AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();
@@ -83,14 +29,16 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
             }
         }
 
-        public static SerializedObject SerializedSingleton => new SerializedObject(Singleton);
+        public static SerializedObject SerializedSingleton => new(Singleton);
 
         #region Inspector Data
 
         [SerializeField]
-        private BuildingData buildingData = new BuildingData();
+        private SingleBuildingData buildingData = new();
+
         [SerializeField]
         private bool clean = true;
+
         [SerializeField]
         private bool showFolder = true;
 
@@ -102,6 +50,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
         [SerializeField]
         private BuildingTypeItem[] typeItems = Array.Empty<BuildingTypeItem>();
 
+        [SerializeField]
+        private BuildingGroup[] groupItems = Array.Empty<BuildingGroup>();
+
         #endregion
 
         #region Properties
@@ -110,7 +61,17 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
 
         public string AppName => appName;
 
-        public BuildingTypeItem[] TypeItems => typeItems;
+        public BuildingTypeItem[] TypeItems
+        {
+            get => typeItems;
+            internal set => typeItems = value;
+        }
+
+        public BuildingGroup[] GroupItems
+        {
+            get => groupItems;
+            internal set => groupItems = value;
+        }
 
         public bool Clean
         {
@@ -145,34 +106,57 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
     }
 
     [Serializable]
-    internal sealed class BuildingData
+    internal sealed class BuildingGroup
     {
         #region Inspector Data
 
         [SerializeField]
-        private bool buildTargetOverwritten;
+        private string name;
+
         [SerializeField]
-        private BuildTarget buildTarget;
-        [SerializeField]
-        private int buildType;
-        [SerializeField]
-        private BuildingToolbar.BuildExtras buildExtras;
+        private BuildingData[] items;
 
         #endregion
 
         #region Properties
 
-        public BuildTarget BuildTarget
+        public string Name
         {
-            get => buildTargetOverwritten ? buildTarget : EditorUserBuildSettings.activeBuildTarget;
-            internal set
-            {
-                if (buildTarget == value)
-                    return;
-                
-                buildTarget = value;
-                buildTargetOverwritten = true;
-            }
+            get => name;
+            internal set => name = value;
+        }
+
+        public BuildingData[] Items
+        {
+            get => items;
+            internal set => items = value;
+        }
+
+        #endregion
+    }
+
+    [Serializable]
+    internal class BuildingData
+    {
+        #region Inspector Data
+
+        [SerializeField]
+        private BuildTarget buildTarget;
+
+        [SerializeField]
+        private int buildType;
+
+        [SerializeField]
+        private BuildExtras buildExtras;
+
+        #endregion
+
+        #region Properties
+
+        public virtual BuildTarget BuildTarget
+        {
+            get => buildTarget;
+            internal set => buildTarget = value;
         }
 
         public int BuildType
@@ -181,14 +165,43 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
             internal set => buildType = value;
         }
 
-        public BuildingToolbar.BuildExtras BuildExtras
+        public BuildExtras BuildExtras
         {
             get => buildExtras;
             internal set => buildExtras = value;
         }
 
         #endregion
-        
+    }
+
+    [Serializable]
+    internal sealed class SingleBuildingData : BuildingData
+    {
+        #region Inspector Data
+
+        [HideInInspector]
+        [SerializeField]
+        private bool buildTargetOverwritten;
+
+        #endregion
+
+        #region Property Data
+
+        public override BuildTarget BuildTarget
+        {
+            get => buildTargetOverwritten ? base.BuildTarget : EditorUserBuildSettings.activeBuildTarget;
+            internal set
+            {
+                if (base.BuildTarget == value)
+                    return;
+
+                base.BuildTarget = value;
+                buildTargetOverwritten = true;
+            }
+        }
+
+        #endregion
+
         internal void ResetBuildTarget()
         {
             buildTargetOverwritten = false;
@@ -327,5 +340,18 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
         Debug,
         Release,
         Master,
+    }
+
+    [Flags]
+    public enum BuildExtras
+    {
+        None = 0x0000,
+        CodeCoverage = 0x0001,
+        UseProfiler = 0x0002,
+        StrictMode = 0x0004,
+        WaitForConnection = 0x0010,
+        ConnectToHost = 0x0020,
+        DetailedReport = 0x0040,
+        SymlinkSources = 0x0080
     }
 }

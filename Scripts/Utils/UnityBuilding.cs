@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Assets;
-using UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -13,6 +12,14 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
     {
         private const string TargetKey = "${TARGET}";
         internal const string DefaultTargetPath = "Builds/" + TargetKey;
+
+        public static void Build(BuildingGroup @group)
+        {
+            foreach (var item in group.Items)
+            {
+                Build(BuildBehavior.BuildOnly, item);
+            }
+        }
 
         public static void Build(BuildBehavior behavior, BuildingData overwriteData = null)
         {
@@ -69,7 +76,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
 
         private static string[] KnownScenes => EditorBuildSettings.scenes.Select(x => x.path).ToArray();
 
-        private static BuildOptions CalculateOptions(BuildingTypeItem buildingType, BuildingToolbar.BuildExtras buildExtras, BuildBehavior behavior, bool clean, bool showFolder)
+        private static BuildOptions CalculateOptions(BuildingTypeItem buildingType, BuildExtras buildExtras, BuildBehavior behavior, bool clean, bool showFolder)
         {
             var options = BuildOptions.None;
             if (buildingType.Compress)
@@ -87,17 +94,17 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
                 options |= BuildOptions.Development;
             }
 
-            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.CodeCoverage))
+            if (buildExtras.HasFlag(BuildExtras.CodeCoverage))
             {
                 options |= BuildOptions.EnableCodeCoverage;
             }
-            
-            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.StrictMode))
+
+            if (buildExtras.HasFlag(BuildExtras.StrictMode))
             {
                 options |= BuildOptions.StrictMode;
             }
-            
-            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.UseProfiler))
+
+            if (buildExtras.HasFlag(BuildExtras.UseProfiler))
             {
                 options |= BuildOptions.ConnectWithProfiler;
                 options |= BuildOptions.EnableDeepProfilingSupport;
@@ -108,22 +115,22 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
                 options |= BuildOptions.ShowBuiltPlayer;
             }
 
-            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.WaitForConnection))
+            if (buildExtras.HasFlag(BuildExtras.WaitForConnection))
             {
                 options |= BuildOptions.WaitForPlayerConnection;
             }
 
-            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.ConnectToHost))
+            if (buildExtras.HasFlag(BuildExtras.ConnectToHost))
             {
                 options |= BuildOptions.ConnectToHost;
             }
-            
-            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.DetailedReport))
+
+            if (buildExtras.HasFlag(BuildExtras.DetailedReport))
             {
                 options |= BuildOptions.DetailedBuildReport;
             }
-            
-            if (buildExtras.HasFlag(BuildingToolbar.BuildExtras.SymlinkSources))
+
+            if (buildExtras.HasFlag(BuildExtras.SymlinkSources))
             {
                 options |= BuildOptions.SymlinkSources;
             }

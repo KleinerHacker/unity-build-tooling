@@ -12,8 +12,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
     [InitializeOnLoad]
     public static class BuildingToolbar
     {
-        private static readonly GenericMenu BuildMenu = new GenericMenu();
-        private static readonly EditorToolDelegate EditorToolRefresh, EditorToolBuild;
+        private static readonly GenericMenu BuildMenu = new();
 
         private static readonly BuildingSettings BuildingSettings;
         private static readonly SerializedObject SerializedObject;
@@ -29,12 +28,6 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
             BuildMenu.AddItem(new GUIContent("Build && Run"), false, () => Build(UnityBuilding.BuildBehavior.BuildAndRun));
             BuildMenu.AddSeparator(null);
             BuildMenu.AddItem(new GUIContent("Build Scripts Only"), false, () => Build(UnityBuilding.BuildBehavior.BuildScriptsOnly));
-            
-            EditorToolRefresh = ScriptableObject.CreateInstance<EditorToolDelegate>();
-            EditorToolRefresh.Setup((Texture2D)EditorGUIUtility.IconContent("d_Refresh").image, "Reset to active target", () => BuildingSettings.ResetBuildTarget());
-            
-            EditorToolBuild = ScriptableObject.CreateInstance<EditorToolDelegate>();
-            EditorToolBuild.Setup((Texture2D)EditorGUIUtility.IconContent("d_Settings").image, "Build the project", () => BuildMenu.ShowAsContext());
         }
 
         static void OnToolbarGUI()
@@ -43,15 +36,16 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
 
             GUILayout.FlexibleSpace();
 
-            GUILayout.Space(50f);
+            GUILayout.Space(30f);
 
             GUILayout.Label("Build: ", ToolbarStyles.labelStyle);
             BuildingSettings.BuildingData.BuildTarget = (BuildTarget)EditorGUILayout.EnumPopup(null, BuildingSettings.BuildingData.BuildTarget,
                 v => UnityHelper.IsBuildTargetSupported((BuildTarget)v), false, ToolbarStyles.popupStyle, ToolbarLayouts.popupLayout);
             
-            EditorGUILayout.EditorToolbar(EditorToolRefresh);
-
-            GUILayout.Space(5f);
+            if (GUILayout.Button(new GUIContent("", (Texture2D)EditorGUIUtility.IconContent("d_Refresh").image, "Reset to active target"), ToolbarStyles.commandButtonStyle))
+            {
+                BuildingSettings.ResetBuildTarget();
+            }
 
             BuildingSettings.BuildingData.BuildType = EditorGUILayout.Popup(BuildingSettings.BuildingData.BuildType, BuildingSettings.TypeItems.Select(x => x.Name).ToArray(),
                 ToolbarStyles.popupStyle, ToolbarLayouts.popupSmallLayout);
@@ -69,9 +63,19 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
 
             BuildingSettings.ShowFolder = GUILayout.Toggle(BuildingSettings.ShowFolder, new GUIContent("Show Folder", "Open the build folder"), ToolbarStyles.toggleStyle);
 
-            GUILayout.Space(5f);
-
-            EditorGUILayout.EditorToolbar(EditorToolBuild);
+            if (GUILayout.Button(new GUIContent("", (Texture2D)EditorGUIUtility.IconContent("d_Settings").image, "Build the project"), ToolbarStyles.commandButtonStyle))
+            {
+                BuildMenu.ShowAsContext();
+            }
+            if (GUILayout.Button(new GUIContent("", (Texture2D)EditorGUIUtility.IconContent("_Menu").image, "Build a group"), ToolbarStyles.commandButtonStyle))
+            {
+                var groupMenu = new GenericMenu();
+                foreach (var groupItem in BuildingSettings.GroupItems)
+                {
+                    groupMenu.AddItem(new GUIContent(groupItem.Name), false, () => UnityBuilding.Build(groupItem));
+                }
+                groupMenu.ShowAsContext();
+            }
 
             SerializedObject.ApplyModifiedProperties();
         }
@@ -102,12 +106,15 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
 
         private static class ToolbarStyles
         {
+            public static readonly GUIStyle commandButtonStyle;
             public static readonly GUIStyle popupStyle;
             public static readonly GUIStyle labelStyle;
             public static readonly GUIStyle toggleStyle;
 
             static ToolbarStyles()
             {
+                commandButtonStyle = "AppCommand";
+
                 popupStyle = new GUIStyle("Popup")
                 {
                     fontSize = 12,
@@ -143,23 +150,10 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
             }
         }
 
-        [Flags]
-        public enum BuildExtras
-        {
-            None = 0x0000,
-            CodeCoverage = 0x0001,
-            UseProfiler = 0x0002,
-            StrictMode = 0x0004,
-            WaitForConnection = 0x0010,
-            ConnectToHost = 0x0020,
-            DetailedReport = 0x0040,
-            SymlinkSources = 0x0080
-        }
-
         private sealed class EditorToolDelegate : EditorTool
         {
             private Action _action;
-            private GUIContent _guiContent = new GUIContent();
+            private GUIContent _guiContent = new();
             
             public override GUIContent toolbarIcon => _guiContent;
 
@@ -169,7 +163,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
                 _action = action;
             }
 
-            public override void OnActivated() => _action();
+            public override void OnActivated() => _action?.Invoke();
         }
     }
 }

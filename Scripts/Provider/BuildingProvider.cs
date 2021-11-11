@@ -22,6 +22,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
         private SerializedObject _settings;
         private SerializedProperty _appNameProperty;
         private SerializedProperty _typeItemsProperty;
+        private SerializedProperty _groupItemsProperty;
 
         public BuildingProvider()
             : base("Project/Build Tools", SettingsScope.Project, new[] { "Build", "Building", "Tool", "Tooling", "Run", "Running", "Compile", "Compiling" })
@@ -37,8 +38,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
                 return;
             _appNameProperty = _settings.FindProperty("appName");
             _typeItemsProperty = _settings.FindProperty("typeItems");
-            if (_typeItemsProperty == null)
-                throw new InvalidOperationException("Items not found");
+            _groupItemsProperty = _settings.FindProperty("groupItems");
         }
 
         public override void OnGUI(string searchContext)
@@ -58,6 +58,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(15f);
             EditorGUILayout.PropertyField(_typeItemsProperty, new GUIContent("Building Types"));
+            
+            EditorGUILayout.Space(15f);
+            EditorGUILayout.PropertyField(_groupItemsProperty, new GUIContent("Building Groups"));
 
             _settings.ApplyModifiedProperties();
 
