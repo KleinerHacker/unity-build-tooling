@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
-using UnityBuildTooling.Editor.build_tooling.Scripts.Provider;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Assets;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Utils;
 using UnityEditor;
 using UnityEditor.EditorTools;
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using UnityToolbarExtender;
 
@@ -21,6 +20,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
 
         static BuildingToolbar()
         {
+            BuildingSettings = BuildingSettings.Singleton;
+            SerializedObject = BuildingSettings.SerializedSingleton;
+            
             ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
 
             BuildMenu.AddItem(new GUIContent("Build"), false, () => Build(UnityBuilding.BuildBehavior.BuildOnly));
@@ -33,9 +35,6 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
             
             EditorToolBuild = ScriptableObject.CreateInstance<EditorToolDelegate>();
             EditorToolBuild.Setup((Texture2D)EditorGUIUtility.IconContent("d_Settings").image, "Build the project", () => BuildMenu.ShowAsContext());
-            
-            BuildingSettings = BuildingSettings.Singleton;
-            SerializedObject = BuildingSettings.SerializedSingleton;
         }
 
         static void OnToolbarGUI()
@@ -47,20 +46,20 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar
             GUILayout.Space(50f);
 
             GUILayout.Label("Build: ", ToolbarStyles.labelStyle);
-            BuildingSettings.BuildTarget = (BuildTarget)EditorGUILayout.EnumPopup(null, BuildingSettings.BuildTarget,
+            BuildingSettings.BuildingData.BuildTarget = (BuildTarget)EditorGUILayout.EnumPopup(null, BuildingSettings.BuildingData.BuildTarget,
                 v => UnityHelper.IsBuildTargetSupported((BuildTarget)v), false, ToolbarStyles.popupStyle, ToolbarLayouts.popupLayout);
             
             EditorGUILayout.EditorToolbar(EditorToolRefresh);
 
             GUILayout.Space(5f);
 
-            BuildingSettings.BuildType = EditorGUILayout.Popup(BuildingSettings.BuildType, BuildingSettings.TypeItems.Select(x => x.Name).ToArray(),
+            BuildingSettings.BuildingData.BuildType = EditorGUILayout.Popup(BuildingSettings.BuildingData.BuildType, BuildingSettings.TypeItems.Select(x => x.Name).ToArray(),
                 ToolbarStyles.popupStyle, ToolbarLayouts.popupSmallLayout);
 
             GUILayout.Space(5f);
 
             GUILayout.Label("Flags: ", ToolbarStyles.labelStyle);
-            BuildingSettings.BuildExtras = (BuildExtras)EditorGUILayout.EnumFlagsField(BuildingSettings.BuildExtras, ToolbarStyles.popupStyle, ToolbarLayouts.popupSmallLayout);
+            BuildingSettings.BuildingData.BuildExtras = (BuildExtras)EditorGUILayout.EnumFlagsField(BuildingSettings.BuildingData.BuildExtras, ToolbarStyles.popupStyle, ToolbarLayouts.popupSmallLayout);
 
             GUILayout.Space(5f);
 

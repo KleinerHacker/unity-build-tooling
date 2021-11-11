@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using UnityBuildTooling.Editor.build_tooling.Scripts.Provider;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Assets;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Toolbar;
 using UnityEditor;
 using UnityEditor.Build;
@@ -14,12 +14,13 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
         private const string TargetKey = "${TARGET}";
         internal const string DefaultTargetPath = "Builds/" + TargetKey;
 
-        public static void Build(BuildBehavior behavior)
+        public static void Build(BuildBehavior behavior, BuildingData overwriteData = null)
         {
             var buildingSettings = BuildingSettings.Singleton;
-            var buildingType = buildingSettings.TypeItems[buildingSettings.BuildType];
+            var buildingData = overwriteData ?? buildingSettings.BuildingData;
+            var buildingType = buildingSettings.TypeItems[buildingData.BuildType];
 
-            var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(buildingSettings.BuildTarget);
+            var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(buildingData.BuildTarget);
             var cppCompilerConfiguration = CalculateConfiguration(buildingType);
             if (cppCompilerConfiguration.HasValue)
             {
@@ -34,14 +35,14 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
 
             EditorUserBuildSettings.buildAppBundle = buildingType.BuildAppBundle;
 
-            var targetPath = DefaultTargetPath.Replace(TargetKey, buildingSettings.BuildTarget.ToString()) + "/" + buildingType.TargetPath;
-            var appName = buildingSettings.AppName + GetExtension(buildingSettings.BuildTarget);
+            var targetPath = DefaultTargetPath.Replace(TargetKey, buildingData.BuildTarget.ToString()) + "/" + buildingType.TargetPath;
+            var appName = buildingSettings.AppName + GetExtension(buildingData.BuildTarget);
             var options = new BuildPlayerOptions
             {
                 scenes = KnownScenes,
-                target = buildingSettings.BuildTarget,
+                target = buildingData.BuildTarget,
                 locationPathName = targetPath + "/" + appName,
-                options = CalculateOptions(buildingType, buildingSettings.BuildExtras, behavior, buildingSettings.Clean, buildingSettings.ShowFolder),
+                options = CalculateOptions(buildingType, buildingData.BuildExtras, behavior, buildingSettings.Clean, buildingSettings.ShowFolder),
                 extraScriptingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup).Split(',', StringSplitOptions.RemoveEmptyEntries).Concat(buildingType.Defines).ToArray()
             };
 
