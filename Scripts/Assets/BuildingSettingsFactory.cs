@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
 
 namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
@@ -32,6 +33,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
                     Defines = new[] { "DEBUG" },
                     CppSettings = IL2CPPSettings.Debug,
                     CppIncrementalBuild = true,
+                    CppCodeGeneration = Il2CppCodeGeneration.OptimizeSize, 
                     StrippingLevel = ManagedStrippingLevel.Disabled,
                     BuildAppBundle = false,
                 },
@@ -57,6 +59,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
                     Defines = new[] { "RELEASE" },
                     CppSettings = IL2CPPSettings.Master,
                     CppIncrementalBuild = false,
+                    CppCodeGeneration = Il2CppCodeGeneration.OptimizeSpeed,
                     StrippingLevel = ManagedStrippingLevel.Low,
                     BuildAppBundle = true,
                 }

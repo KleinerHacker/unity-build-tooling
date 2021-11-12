@@ -34,11 +34,14 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
                 PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.IL2CPP);
                 PlayerSettings.SetIl2CppCompilerConfiguration(buildTargetGroup, cppCompilerConfiguration.Value);
                 PlayerSettings.SetIncrementalIl2CppBuild(buildTargetGroup, buildingType.CppIncrementalBuild);
+                EditorUserBuildSettings.il2CppCodeGeneration = buildingType.CppCodeGeneration;
             }
             else
             {
                 PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.Mono2x);
             }
+
+            PlayerSettings.Android.targetArchitectures = buildingType.AndroidArchitecture;
 
             EditorUserBuildSettings.buildAppBundle = buildingType.BuildAppBundle;
 

@@ -1,6 +1,7 @@
 using System;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Utils;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -238,6 +239,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
         private bool cppIncrementalBuild;
 
         [SerializeField]
+        private Il2CppCodeGeneration cppCodeGeneration = Il2CppCodeGeneration.OptimizeSpeed;
+
+        [SerializeField]
         private ManagedStrippingLevel strippingLevel = ManagedStrippingLevel.Disabled;
 
         [Header("Android")]
@@ -299,6 +303,12 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
         {
             get => cppIncrementalBuild;
             internal set => cppIncrementalBuild = value;
+        }
+
+        public Il2CppCodeGeneration CppCodeGeneration
+        {
+            get => cppCodeGeneration;
+            internal set => cppCodeGeneration = value;
         }
 
         public ManagedStrippingLevel StrippingLevel
