@@ -1,11 +1,11 @@
 using System;
-using UnityBuildTooling.Editor.build_tooling.Scripts.Utils;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets
 {
     internal sealed class BuildingSettings : ScriptableObject
     {

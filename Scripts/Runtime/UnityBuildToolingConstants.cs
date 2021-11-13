@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UnityBuildTooling.Editor.build_tooling.Scripts
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime
 {
     internal sealed class UnityBuildToolingConstants : MonoBehaviour
     {

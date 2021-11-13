@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets.Misc
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets.Misc
 {
     [CreateAssetMenu(menuName = UnityBuildToolingConstants.Menu.Asset.MiscMenu + "/Unity Package")]
     public sealed class UnityPackageAsset : ScriptableObject

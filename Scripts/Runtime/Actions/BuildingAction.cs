@@ -1,7 +1,7 @@
-using UnityBuildTooling.Editor.build_tooling.Scripts.Utils;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils;
 using UnityEditor;
 
-namespace UnityBuildTooling.Editor.build_tooling.Scripts.Actions
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Actions
 {
     public static class BuildingAction
     {

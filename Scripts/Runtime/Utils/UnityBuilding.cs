@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Linq;
-using UnityBuildTooling.Editor.build_tooling.Scripts.Assets;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 
-namespace UnityBuildTooling.Editor.build_tooling.Scripts.Utils
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
 {
     internal static class UnityBuilding
     {

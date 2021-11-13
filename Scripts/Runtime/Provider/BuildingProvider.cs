@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
-using UnityBuildTooling.Editor.build_tooling.Scripts.Assets;
+using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityBuildTooling.Editor.build_tooling.Scripts.Provider
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
 {
     public sealed class BuildingProvider : SettingsProvider
     {

@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
 
-namespace UnityBuildTooling.Editor.build_tooling.Scripts.Assets
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets
 {
     internal static class BuildingSettingsFactory
     {
