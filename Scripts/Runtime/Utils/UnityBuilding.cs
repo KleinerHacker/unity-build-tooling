@@ -55,7 +55,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
                 target = buildingData.BuildTarget,
                 locationPathName = targetPath + "/" + appName,
                 options = CalculateOptions(buildingType, buildingData.BuildExtras, behavior, buildingSettings.Clean, buildingSettings.ShowFolder),
-                extraScriptingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup).Split(',', StringSplitOptions.RemoveEmptyEntries).Concat(buildingType.Defines).ToArray()
+                extraScriptingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup).Split(',').Concat(buildingType.Defines).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray()
             };
 
             if (buildingSettings.Clean && Directory.Exists(targetPath))
@@ -75,7 +75,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
             }
             finally
             {
-                EditorUserBuildSettings.SwitchActiveBuildTarget(NamedBuildTarget.FromBuildTargetGroup(oldBuildGroup), oldBuildTarget);
+                EditorUserBuildSettings.SwitchActiveBuildTarget(oldBuildGroup, oldBuildTarget);
             }
         }
 
@@ -135,10 +135,12 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
                 options |= BuildOptions.DetailedBuildReport;
             }
 
+#if UNITY_2021_2_OR_NEWER
             if (buildExtras.HasFlag(BuildExtras.SymlinkSources))
             {
                 options |= BuildOptions.SymlinkSources;
             }
+#endif
 
             switch (behavior)
             {
@@ -154,10 +156,12 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
                     throw new NotImplementedException();
             }
 
+#if UNITY_2021_2_OR_NEWER
             if (clean)
             {
                 options |= BuildOptions.CleanBuildCache;
             }
+#endif
 
             return options;
         }
@@ -192,7 +196,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
                 case BuildTarget.CloudRendering:
                 case BuildTarget.GameCoreXboxOne:
                 case BuildTarget.PS5:
+#if UNITY_2021_2_OR_NEWER
                 case BuildTarget.EmbeddedLinux:
+#endif
                 case BuildTarget.NoTarget:
                     return "";
                 case BuildTarget.StandaloneWindows:
