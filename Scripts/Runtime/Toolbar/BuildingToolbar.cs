@@ -153,7 +153,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Toolbar
         private sealed class EditorToolDelegate : EditorTool
         {
             private Action _action;
-            private GUIContent _guiContent = new();
+            private GUIContent _guiContent = new GUIContent();
             
             public override GUIContent toolbarIcon => _guiContent;
 
