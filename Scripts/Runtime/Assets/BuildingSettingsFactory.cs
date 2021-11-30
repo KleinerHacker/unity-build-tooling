@@ -33,7 +33,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets
                     Defines = new[] { "DEBUG" },
                     CppSettings = IL2CPPSettings.Debug,
                     CppIncrementalBuild = true,
-                    CppCodeGeneration = Il2CppCodeGeneration.OptimizeSize, 
+#if UNITY_2021_2_OR_NEWER
+                    CppCodeGeneration = Il2CppCodeGeneration.OptimizeSize,
+#endif
                     StrippingLevel = ManagedStrippingLevel.Disabled,
                     BuildAppBundle = false,
                 },
@@ -59,7 +61,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets
                     Defines = new[] { "RELEASE" },
                     CppSettings = IL2CPPSettings.Master,
                     CppIncrementalBuild = false,
+#if UNITY_2021_2_OR_NEWER
                     CppCodeGeneration = Il2CppCodeGeneration.OptimizeSpeed,
+#endif
                     StrippingLevel = ManagedStrippingLevel.Low,
                     BuildAppBundle = true,
                 }

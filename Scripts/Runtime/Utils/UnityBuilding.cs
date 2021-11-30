@@ -34,7 +34,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
                 PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.IL2CPP);
                 PlayerSettings.SetIl2CppCompilerConfiguration(buildTargetGroup, cppCompilerConfiguration.Value);
                 PlayerSettings.SetIncrementalIl2CppBuild(buildTargetGroup, buildingType.CppIncrementalBuild);
+#if UNITY_2021_2_OR_NEWER
                 EditorUserBuildSettings.il2CppCodeGeneration = buildingType.CppCodeGeneration;
+#endif
             }
             else
             {

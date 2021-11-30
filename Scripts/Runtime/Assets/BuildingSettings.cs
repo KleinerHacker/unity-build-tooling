@@ -238,8 +238,10 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets
         [SerializeField]
         private bool cppIncrementalBuild;
 
+#if UNITY_2021_2_OR_NEWER
         [SerializeField]
         private Il2CppCodeGeneration cppCodeGeneration = Il2CppCodeGeneration.OptimizeSpeed;
+#endif
 
         [SerializeField]
         private ManagedStrippingLevel strippingLevel = ManagedStrippingLevel.Disabled;
@@ -305,11 +307,13 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets
             internal set => cppIncrementalBuild = value;
         }
 
+#if UNITY_2021_2_OR_NEWER
         public Il2CppCodeGeneration CppCodeGeneration
         {
             get => cppCodeGeneration;
             internal set => cppCodeGeneration = value;
         }
+#endif
 
         public ManagedStrippingLevel StrippingLevel
         {
