@@ -12,7 +12,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Toolbar
     [InitializeOnLoad]
     public static class BuildingToolbar
     {
-        private static readonly GenericMenu BuildMenu = new();
+        private static readonly GenericMenu BuildMenu = new GenericMenu();
 
         private static readonly BuildingSettings BuildingSettings;
         private static readonly SerializedObject SerializedObject;

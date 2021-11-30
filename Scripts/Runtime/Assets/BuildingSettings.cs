@@ -30,12 +30,12 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets
             }
         }
 
-        public static SerializedObject SerializedSingleton => new(Singleton);
+        public static SerializedObject SerializedSingleton => new SerializedObject(Singleton);
 
         #region Inspector Data
 
         [SerializeField]
-        private SingleBuildingData buildingData = new();
+        private SingleBuildingData buildingData = new SingleBuildingData();
 
         [SerializeField]
         private bool clean = true;
