@@ -25,7 +25,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
         private SerializedProperty _groupItemsProperty;
 
         public BuildingProvider()
-            : base("Project/Build Tools", SettingsScope.Project, new[] { "Build", "Building", "Tool", "Tooling", "Run", "Running", "Compile", "Compiling" })
+            : base("Project/Player/Building", SettingsScope.Project, new[] { "Build", "Building", "Tool", "Tooling", "Run", "Running", "Compile", "Compiling" })
         {
         }
 

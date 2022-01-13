@@ -7,7 +7,7 @@ using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityToolbarExtender;
 
-namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Toolbar
+namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
 {
     [InitializeOnLoad]
     public static class BuildingToolbar
