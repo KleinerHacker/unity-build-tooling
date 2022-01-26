@@ -57,11 +57,11 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
 
             GUILayout.Space(5f);
 
-            BuildingSettings.Clean = GUILayout.Toggle(BuildingSettings.Clean, new GUIContent("Clean", "Clean complete build cache"), ToolbarStyles.toggleStyle);
-
+            BuildingSettings.Clean = GUILayout.Toggle(BuildingSettings.Clean, new GUIContent(EditorGUIUtility.IconContent("Grid.EraserTool").image, "Clean complete build cache"), ToolbarStyles.commandButtonStyle);
+            BuildingSettings.ShowFolder = GUILayout.Toggle(BuildingSettings.ShowFolder, new GUIContent(EditorGUIUtility.IconContent("d_FolderOpened Icon").image, "Open the build folder"), ToolbarStyles.commandButtonStyle);
+            BuildingSettings.RunTests = GUILayout.Toggle(BuildingSettings.RunTests, new GUIContent(EditorGUIUtility.IconContent("FilterSelectedOnly").image, "Run tests before build starts"), ToolbarStyles.commandButtonStyle);
+            
             GUILayout.Space(5f);
-
-            BuildingSettings.ShowFolder = GUILayout.Toggle(BuildingSettings.ShowFolder, new GUIContent("Show Folder", "Open the build folder"), ToolbarStyles.toggleStyle);
 
             if (GUILayout.Button(new GUIContent("", (Texture2D)EditorGUIUtility.IconContent("d_Settings").image, "Build the project"), ToolbarStyles.commandButtonStyle))
             {

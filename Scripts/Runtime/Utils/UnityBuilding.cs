@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets;
 using UnityEditor;
-using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 
 namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
@@ -13,69 +12,94 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
         private const string TargetKey = "${TARGET}";
         internal const string DefaultTargetPath = "Builds/" + TargetKey;
 
-        public static void Build(BuildingGroup @group)
+        public static void Build(BuildingGroup @group, bool runTest = true)
         {
-            foreach (var item in group.Items)
+            if (runTest && BuildingSettings.Singleton.RunTests)
             {
-                Build(BuildBehavior.BuildOnly, item);
-            }
-        }
-
-        public static void Build(BuildBehavior behavior, BuildingData overwriteData = null)
-        {
-            var buildingSettings = BuildingSettings.Singleton;
-            var buildingData = overwriteData ?? buildingSettings.BuildingData;
-            var buildingType = buildingSettings.TypeItems[buildingData.BuildType];
-
-            var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(buildingData.BuildTarget);
-            var cppCompilerConfiguration = CalculateConfiguration(buildingType);
-            if (cppCompilerConfiguration.HasValue)
-            {
-                PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.IL2CPP);
-                PlayerSettings.SetIl2CppCompilerConfiguration(buildTargetGroup, cppCompilerConfiguration.Value);
-                PlayerSettings.SetIncrementalIl2CppBuild(buildTargetGroup, buildingType.CppIncrementalBuild);
-#if UNITY_2021_2_OR_NEWER
-                EditorUserBuildSettings.il2CppCodeGeneration = buildingType.CppCodeGeneration;
-#endif
+                UnityTesting.RunTests(@group);
             }
             else
             {
-                PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.Mono2x);
+                RunBuild();
             }
 
-            PlayerSettings.Android.targetArchitectures = buildingType.AndroidArchitecture;
-
-            EditorUserBuildSettings.buildAppBundle = buildingType.BuildAppBundle;
-
-            var targetPath = DefaultTargetPath.Replace(TargetKey, buildingData.BuildTarget.ToString()) + "/" + buildingType.TargetPath;
-            var appName = buildingSettings.AppName + GetExtension(buildingData.BuildTarget);
-            var options = new BuildPlayerOptions
+            void RunBuild()
             {
-                scenes = KnownScenes,
-                target = buildingData.BuildTarget,
-                locationPathName = targetPath + "/" + appName,
-                options = CalculateOptions(buildingType, buildingData.BuildExtras, behavior, buildingSettings.Clean, buildingSettings.ShowFolder),
-                extraScriptingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup).Split(',').Concat(buildingType.Defines).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray()
-            };
-
-            if (buildingSettings.Clean && Directory.Exists(targetPath))
-            {
-                Directory.Delete(targetPath, true);
-            }
-
-            var oldBuildTarget = EditorUserBuildSettings.activeBuildTarget;
-            var oldBuildGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-            try
-            {
-                var buildReport = BuildPipeline.BuildPlayer(options);
-                if (buildReport.summary.result != BuildResult.Succeeded)
+                foreach (var item in @group.Items)
                 {
-                    EditorUtility.DisplayDialog("Build", "Build has failed", "OK");
+                    Build(BuildBehavior.BuildOnly, item, false);
                 }
             }
-            finally
+        }
+
+        public static void Build(BuildBehavior behavior, BuildingData overwriteData = null, bool runTest = true)
+        {
+            var buildingSettings = BuildingSettings.Singleton;
+
+            if (runTest && buildingSettings.RunTests)
             {
-                EditorUserBuildSettings.SwitchActiveBuildTarget(oldBuildGroup, oldBuildTarget);
+                UnityTesting.RunTests(behavior, overwriteData);
+            }
+            else
+            {
+                RunBuild();
+            }
+
+            void RunBuild()
+            {
+                var buildingData = overwriteData ?? buildingSettings.BuildingData;
+                var buildingType = buildingSettings.TypeItems[buildingData.BuildType];
+
+                var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(buildingData.BuildTarget);
+                var cppCompilerConfiguration = CalculateConfiguration(buildingType);
+                if (cppCompilerConfiguration.HasValue)
+                {
+                    PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.IL2CPP);
+                    PlayerSettings.SetIl2CppCompilerConfiguration(buildTargetGroup, cppCompilerConfiguration.Value);
+                    PlayerSettings.SetIncrementalIl2CppBuild(buildTargetGroup, buildingType.CppIncrementalBuild);
+#if UNITY_2021_2_OR_NEWER
+                    EditorUserBuildSettings.il2CppCodeGeneration = buildingType.CppCodeGeneration;
+#endif
+                }
+                else
+                {
+                    PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.Mono2x);
+                }
+
+                PlayerSettings.Android.targetArchitectures = buildingType.AndroidArchitecture;
+
+                EditorUserBuildSettings.buildAppBundle = buildingType.BuildAppBundle;
+
+                var targetPath = DefaultTargetPath.Replace(TargetKey, buildingData.BuildTarget.ToString()) + "/" + buildingType.TargetPath;
+                var appName = buildingSettings.AppName + GetExtension(buildingData.BuildTarget);
+                var options = new BuildPlayerOptions
+                {
+                    scenes = KnownScenes,
+                    target = buildingData.BuildTarget,
+                    locationPathName = targetPath + "/" + appName,
+                    options = CalculateOptions(buildingType, buildingData.BuildExtras, behavior, buildingSettings.Clean, buildingSettings.ShowFolder),
+                    extraScriptingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup).Split(',').Concat(buildingType.Defines).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray()
+                };
+
+                if (buildingSettings.Clean && Directory.Exists(targetPath))
+                {
+                    Directory.Delete(targetPath, true);
+                }
+
+                var oldBuildTarget = EditorUserBuildSettings.activeBuildTarget;
+                var oldBuildGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+                try
+                {
+                    var buildReport = BuildPipeline.BuildPlayer(options);
+                    if (buildReport.summary.result != BuildResult.Succeeded)
+                    {
+                        EditorUtility.DisplayDialog("Build", "Build has failed", "OK");
+                    }
+                }
+                finally
+                {
+                    EditorUserBuildSettings.SwitchActiveBuildTarget(oldBuildGroup, oldBuildTarget);
+                }
             }
         }
 

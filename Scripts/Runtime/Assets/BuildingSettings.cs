@@ -43,6 +43,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets
         [SerializeField]
         private bool showFolder = true;
 
+        [SerializeField]
+        private bool runTests = true;
+
         [FormerlySerializedAs("targetName")]
         [SerializeField]
         private string appName;
@@ -84,6 +87,12 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets
         {
             get => showFolder;
             internal set => showFolder = value;
+        }
+
+        public bool RunTests
+        {
+            get => runTests;
+            internal set => runTests = value;
         }
 
         #endregion
