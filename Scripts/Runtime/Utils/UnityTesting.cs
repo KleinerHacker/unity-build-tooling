@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets;
 using UnityEditor;
@@ -21,7 +20,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
             InitTest();
         }
 
-        public static void InitTest()
+        private static void InitTest()
         {
             if (_testRunnerApi == null)
             {
@@ -52,33 +51,25 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
 
         private static void StoreGroup(BuildingGroup @group)
         {
-            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.Templates) + "/" + GroupFileName;
-            using (var stream = new FileStream(fileName, FileMode.Create))
-            {
-                using (var writer = new StreamWriter(stream))
-                {
-                    writer.WriteLine(JsonUtility.ToJson(@group));
-                }
-            }
+            var fileName = Path.GetTempPath() + "/" + GroupFileName;
+            using var stream = new FileStream(fileName, FileMode.Create);
+            using var writer = new StreamWriter(stream);
+            writer.WriteLine(JsonUtility.ToJson(@group));
         }
 
         private static bool LoadGroup(out BuildingGroup @group)
         {
             @group = null;
-            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.Templates) + "/" + GroupFileName;
+            var fileName = Path.GetTempPath() + "/" + GroupFileName;
             
             if (!File.Exists(fileName))
                 return false;
 
             try
             {
-                using (var stream = new FileStream(fileName, FileMode.Open))
-                {
-                    using (var reader = new StreamReader(stream))
-                    {
-                        @group = JsonUtility.FromJson<BuildingGroup>(reader.ReadLine());
-                    }
-                }
+                using var stream = new FileStream(fileName, FileMode.Open);
+                using var reader = new StreamReader(stream);
+                @group = JsonUtility.FromJson<BuildingGroup>(reader.ReadLine());
             }
             finally
             {
@@ -90,15 +81,11 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
 
         private static void StoreBase(UnityBuilding.BuildBehavior behavior, BuildingData overwriteData)
         {
-            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.Templates) + "/" + BaseFileName;
-            using (var stream = new FileStream(fileName, FileMode.Create))
-            {
-                using (var writer = new StreamWriter(stream))
-                {
-                    writer.WriteLine(JsonUtility.ToJson(behavior));
-                    writer.WriteLine(JsonUtility.ToJson(overwriteData));
-                }
-            }
+            var fileName = Path.GetTempPath() + "/" + BaseFileName;
+            using var stream = new FileStream(fileName, FileMode.Create);
+            using var writer = new StreamWriter(stream);
+            writer.WriteLine(JsonUtility.ToJson(behavior));
+            writer.WriteLine(JsonUtility.ToJson(overwriteData));
         }
 
         private static bool LoadBase(out UnityBuilding.BuildBehavior behavior, out BuildingData overwriteData)
@@ -106,21 +93,17 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
             behavior = UnityBuilding.BuildBehavior.BuildOnly;
             overwriteData = null;
             
-            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.Templates) + "/" + BaseFileName;
+            var fileName = Path.GetTempPath() + "/" + BaseFileName;
             
             if (!File.Exists(fileName))
                 return false;
 
             try
             {
-                using (var stream = new FileStream(fileName, FileMode.Open))
-                {
-                    using (var reader = new StreamReader(stream))
-                    {
-                        behavior = JsonUtility.FromJson<UnityBuilding.BuildBehavior>(reader.ReadLine());
-                        overwriteData = JsonUtility.FromJson<BuildingData>(reader.ReadLine());
-                    }
-                }
+                using var stream = new FileStream(fileName, FileMode.Open);
+                using var reader = new StreamReader(stream);
+                behavior = JsonUtility.FromJson<UnityBuilding.BuildBehavior>(reader.ReadLine());
+                overwriteData = JsonUtility.FromJson<BuildingData>(reader.ReadLine());
             }
             finally
             {
