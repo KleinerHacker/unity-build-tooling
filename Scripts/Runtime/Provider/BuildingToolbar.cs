@@ -3,6 +3,7 @@ using System.Linq;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils;
 using UnityEditor;
+using UnityEditor.Compilation;
 using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityToolbarExtender;
@@ -63,6 +64,10 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
             
             GUILayout.Space(5f);
 
+            if (GUILayout.Button(new GUIContent("", (Texture2D)EditorGUIUtility.IconContent("preAudioLoopOff").image, "Rebuild Scripts"), ToolbarStyles.commandButtonStyle))
+            {
+                CompilationPipeline.RequestScriptCompilation(RequestScriptCompilationOptions.CleanBuildCache);
+            }
             if (GUILayout.Button(new GUIContent("", (Texture2D)EditorGUIUtility.IconContent("d_Settings").image, "Build the project"), ToolbarStyles.commandButtonStyle))
             {
                 BuildMenu.ShowAsContext();

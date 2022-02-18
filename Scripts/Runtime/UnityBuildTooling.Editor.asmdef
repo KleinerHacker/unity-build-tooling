@@ -1,10 +1,8 @@
 {
     "name": "UnityBuildTooling.Editor",
     "rootNamespace": "UnityBuildTooling.Editor",
-    "references": [
-        "GUID:0a0471484b079be408cb3a0d7fe94736",
-        "GUID:5d0595cabca3f65418ec01a472735d07"
-    ],
+    "references": ["GUID:0a0471484b079be408cb3a0d7fe94736",
+"GUID:5d0595cabca3f65418ec01a472735d07"],
     "includePlatforms": [
         "Editor"
     ],
