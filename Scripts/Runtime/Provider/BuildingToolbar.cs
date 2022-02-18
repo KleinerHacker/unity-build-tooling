@@ -26,9 +26,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
             ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
 
             BuildMenu.AddItem(new GUIContent("Build"), false, () => Build(UnityBuilding.BuildBehavior.BuildOnly));
-            BuildMenu.AddItem(new GUIContent("Build && Run"), false, () => Build(UnityBuilding.BuildBehavior.BuildAndRun));
-            BuildMenu.AddSeparator(null);
-            BuildMenu.AddItem(new GUIContent("Build Scripts Only"), false, () => Build(UnityBuilding.BuildBehavior.BuildScriptsOnly));
+            BuildMenu.AddItem(new GUIContent("Build and Run"), false, () => Build(UnityBuilding.BuildBehavior.BuildAndRun));
         }
 
         static void OnToolbarGUI()
