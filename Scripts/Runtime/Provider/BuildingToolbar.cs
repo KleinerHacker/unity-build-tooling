@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Unity.CodeEditor;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Assets;
 using UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils;
 using UnityEditor;
@@ -23,13 +24,14 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
             BuildingSettings = BuildingSettings.Singleton;
             SerializedObject = BuildingSettings.SerializedSingleton;
             
-            ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
+            ToolbarExtender.LeftToolbarGUI.Add(OnLeftToolbarGUI);
+            ToolbarExtender.RightToolbarGUI.Insert(0, OnRightToolbarGUI);
 
             BuildMenu.AddItem(new GUIContent("Build"), false, () => Build(UnityBuilding.BuildBehavior.BuildOnly));
             BuildMenu.AddItem(new GUIContent("Build and Run"), false, () => Build(UnityBuilding.BuildBehavior.BuildAndRun));
         }
 
-        static void OnToolbarGUI()
+        private static void OnLeftToolbarGUI()
         {
             SerializedObject.Update();
 
@@ -78,6 +80,18 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
                     groupMenu.AddItem(new GUIContent(groupItem.Name), false, () => UnityBuilding.Build(groupItem));
                 }
                 groupMenu.ShowAsContext();
+            }
+
+            SerializedObject.ApplyModifiedProperties();
+        }
+
+        private static void OnRightToolbarGUI()
+        {
+            SerializedObject.Update();
+
+            if (GUILayout.Button(new GUIContent("", (Texture2D)EditorGUIUtility.IconContent("winbtn_win_restore").image, "Open Project"), ToolbarStyles.commandButtonStyle))
+            {
+                CodeEditor.CurrentEditor.OpenProject();
             }
 
             SerializedObject.ApplyModifiedProperties();

@@ -1,6 +1,6 @@
 {
   "name": "org.pcsoft.build-tooling",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "displayName": "Build Tooling",
   "description": "Add a build toolbar into unity to create and run build very easy.",
   "unity": "2021.1",
@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "com.marijnzwemmer.unity-toolbar-extender": "1.4.1",
-    "org.pcsoft.editor-ex": "1.1.6"
+    "org.pcsoft.editor-ex": "1.1.7"
   },
   "author": {
     "name": "Pfeiffer C Soft",
