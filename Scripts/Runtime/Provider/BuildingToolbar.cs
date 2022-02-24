@@ -19,6 +19,8 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
         private static readonly BuildingSettings BuildingSettings;
         private static readonly SerializedObject SerializedObject;
 
+        private static bool _blockRecompile;
+
         static BuildingToolbar()
         {
             BuildingSettings = BuildingSettings.Singleton;
@@ -29,6 +31,9 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
 
             BuildMenu.AddItem(new GUIContent("Build"), false, () => Build(UnityBuilding.BuildBehavior.BuildOnly));
             BuildMenu.AddItem(new GUIContent("Build and Run"), false, () => Build(UnityBuilding.BuildBehavior.BuildAndRun));
+
+            CompilationPipeline.compilationStarted += _ => _blockRecompile = true;
+            CompilationPipeline.compilationFinished += _ => _blockRecompile = false;
         }
 
         private static void OnLeftToolbarGUI()
@@ -64,10 +69,13 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
             
             GUILayout.Space(5f);
 
+            EditorGUI.BeginDisabledGroup(_blockRecompile);
             if (GUILayout.Button(new GUIContent("", (Texture2D)EditorGUIUtility.IconContent("preAudioLoopOff").image, "Rebuild Scripts"), ToolbarStyles.commandButtonStyle))
             {
+                _blockRecompile = true;
                 CompilationPipeline.RequestScriptCompilation(RequestScriptCompilationOptions.CleanBuildCache);
             }
+            EditorGUI.EndDisabledGroup();
             if (GUILayout.Button(new GUIContent("", (Texture2D)EditorGUIUtility.IconContent("d_Settings").image, "Build the project"), ToolbarStyles.commandButtonStyle))
             {
                 BuildMenu.ShowAsContext();
