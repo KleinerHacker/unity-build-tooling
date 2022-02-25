@@ -38,7 +38,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
 
             if (runTest && buildingSettings.RunTests)
             {
-                UnityTesting.RunTests(behavior, overwriteData);
+                UnityTesting.RunTests(overwriteData, behavior);
             }
             else
             {

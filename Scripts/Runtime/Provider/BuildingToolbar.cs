@@ -31,6 +31,8 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
 
             BuildMenu.AddItem(new GUIContent("Build"), false, () => Build(UnityBuilding.BuildBehavior.BuildOnly));
             BuildMenu.AddItem(new GUIContent("Build and Run"), false, () => Build(UnityBuilding.BuildBehavior.BuildAndRun));
+            BuildMenu.AddSeparator(null);
+            BuildMenu.AddItem(new GUIContent("Run Tests"), false, RunTests);
 
             CompilationPipeline.compilationStarted += _ => _blockRecompile = true;
             CompilationPipeline.compilationFinished += _ => _blockRecompile = false;
@@ -109,6 +111,12 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Provider
         {
             AssetDatabase.SaveAssets();
             UnityBuilding.Build(behavior);
+        }
+
+        private static void RunTests()
+        {
+            AssetDatabase.SaveAssets();
+            UnityTesting.RunTests(BuildingSettings.BuildingData);
         }
 
         private static class ToolbarLayouts
