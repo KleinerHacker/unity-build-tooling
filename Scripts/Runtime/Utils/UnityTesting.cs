@@ -85,7 +85,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
             var fileName = Path.GetTempPath() + "/" + BaseFileName;
             using var stream = new FileStream(fileName, FileMode.Create);
             using var writer = new StreamWriter(stream);
-            writer.WriteLine(JsonUtility.ToJson(behavior));
+            writer.WriteLine(behavior == null ? "<null>" : JsonUtility.ToJson(behavior.Value));
             writer.WriteLine(JsonUtility.ToJson(overwriteData));
         }
 
@@ -103,7 +103,8 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
             {
                 using var stream = new FileStream(fileName, FileMode.Open);
                 using var reader = new StreamReader(stream);
-                behavior = JsonUtility.FromJson<UnityBuilding.BuildBehavior?>(reader.ReadLine());
+                var behaviorStr = reader.ReadLine();
+                behavior = behaviorStr == "<null>" ? null : JsonUtility.FromJson<UnityBuilding.BuildBehavior>(behaviorStr);
                 overwriteData = JsonUtility.FromJson<BuildingData>(reader.ReadLine());
             }
             finally
