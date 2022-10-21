@@ -217,7 +217,7 @@ namespace UnityBuildTooling.Editor.build_tooling.Scripts.Runtime.Utils
                 case BuildTarget.Switch:
                 case BuildTarget.Lumin:
                 case BuildTarget.Stadia:
-                case BuildTarget.CloudRendering:
+                case BuildTarget.LinuxHeadlessSimulation:
                 case BuildTarget.GameCoreXboxOne:
                 case BuildTarget.PS5:
 #if UNITY_2021_2_OR_NEWER
