@@ -1,3 +1,8 @@
+# Deprecated
+
+New project:
+https://github.com/KleinerHacker/unity-ide-ex
+
 # unity-build-tooling
 Extension for unity to make easier create / run a build
 
